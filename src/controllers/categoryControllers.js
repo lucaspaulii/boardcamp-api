@@ -11,7 +11,6 @@ export async function getCategories(req, res) {
 
 export async function postCategories(req, res) {
   const categoryName = req.categoryName;
-  console.log(categoryName);
   try {
     await connection.query(`INSERT INTO categories (name) VALUES ($1)`, [
       categoryName,
