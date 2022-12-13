@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getRentals, postRental } from "../controllers/rentalsControllers.js";
+import { deleteRent, endRent, getRentals, postRental } from "../controllers/rentalsControllers.js";
 import { validateRental } from "../middlewares/validateRental.js";
 
 const router = Router();
@@ -8,8 +8,8 @@ router.get("/rentals", getRentals);
 
 router.post("/rentals", validateRental, postRental);
 
-router.put("/rentals/:id/return");
+router.put("/rentals/:id/return", endRent);
 
-router.delete("/rentals/:id");
+router.delete("/rentals/:id", deleteRent);
 
 export default router;
