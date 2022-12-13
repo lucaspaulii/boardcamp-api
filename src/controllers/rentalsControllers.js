@@ -30,12 +30,12 @@ export async function getRentals(req, res) {
   if (customerID) {
     const customerQuery = query + ` WHERE customers.id = $1`;
     const customerRentals = await connection.query(customerQuery, [customerID]);
-    res.send(customerRentals.rows[0]);
+    return res.send(customerRentals.rows);
   }
   if (gameID) {
     const gamesQuery = query + ` WHERE games.id = $1`;
-    const gamesRentals = await connection.query(gamesQuery, [customerID]);
-    res.send(gamesRentals.rows[0]);
+    const gamesRentals = await connection.query(gamesQuery, [gameID]);
+    return res.send(gamesRentals.rows);
   }
   try {
     const rentals = await connection.query(query);
@@ -57,6 +57,12 @@ export async function postRental(req, res) {
     delayFee,
   } = req.rentalObj;
   try {
+    const gamesRented = await connection.query(
+      `SELECT rentals.*, games."stockTotal" FROM rentals JOIN games ON rentals."gameId" = games.id WHERE games.id = $1`, [gameId]
+    );
+    const { stockTotal } = gamesRented.rows[0];
+    console.log(gamesRented.rows.length)
+    if (gamesRented.rows.length >= stockTotal) return res.sendStatus(400);
     await connection.query(
       `
     INSERT INTO rentals 
@@ -93,7 +99,7 @@ export async function endRent(req, res) {
       rentalByID.rows[0];
     if (returnDate !== null) return res.sendStatus(400);
     const daysReturn = Math.ceil(
-      ((new Date(returnDateToFill)) - rentDate) / (1000 * 3600 * 24)
+      (new Date(returnDateToFill) - rentDate) / (1000 * 3600 * 24)
     );
     const delay = daysReturn - daysRented;
     let delayFee;
