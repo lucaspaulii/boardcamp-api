@@ -8,7 +8,7 @@ router.get("/rentals", getRentals);
 
 router.post("/rentals", validateRental, postRental);
 
-router.put("/rentals/:id/return", endRent);
+router.post("/rentals/:id/return", endRent);
 
 router.delete("/rentals/:id", deleteRent);
 

@@ -13,6 +13,6 @@ app.use(gameRoutes);
 app.use(customerRoutes);
 app.use(rentRoutes);
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 
 app.listen(port, () => console.log(`app running at: port ${port}`));

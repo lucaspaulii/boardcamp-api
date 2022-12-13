@@ -60,7 +60,7 @@ export async function postRental(req, res) {
     const gamesRented = await connection.query(
       `SELECT rentals.*, games."stockTotal" FROM rentals JOIN games ON rentals."gameId" = games.id WHERE games.id = $1`, [gameId]
     );
-    const { stockTotal } = gamesRented.rows[0];
+    const stockTotal = gamesRented.rows[0]?.stockTotal;
     console.log(gamesRented.rows.length)
     if (gamesRented.rows.length >= stockTotal) return res.sendStatus(400);
     await connection.query(
